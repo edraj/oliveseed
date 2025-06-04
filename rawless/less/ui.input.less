@@ -1,0 +1,205 @@
+
+
+.ol-input {
+  border: 1px solid var(--sh-grey);
+  border-radius: var(--sh-radius);
+  outline: none;
+  padding: var(--sh-halfspace);
+  box-shadow: 0 2px 5px 0 rgba(@grey-light, 0.8);
+
+  background-color: var(--sh-white);
+  caret-color: var(--sh-linkcolor);
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--sh-linkcolor);
+    box-shadow: 0 0 0 1px var(--sh-linkcolor);
+  }
+
+
+}
+
+
+.ol-field {
+  position: relative;
+  display: block;
+  margin-block-end: var(--sh-doublespace);
+  margin-block-start: var(--sh-halfspace);
+
+  .ol-input {
+
+    /* nice to have, hide asterisk when input is focused */
+    &:focus-visible~.ol-required {
+      display: none !important;
+    }
+
+    &::placeholder {
+      color: transparent !important;
+    }
+
+  }
+
+
+  .ol-input~.ol-required {
+    display: none;
+    position: absolute;
+    inset-inline-end: var(--sh-halfspace);
+    inset-block-start: 0;
+    z-index: 2;
+
+    &:after {
+      display: block;
+      content: '*';
+      font-size: 1.6rem;
+      font-weight: var(--sh-font-weight-bold);
+      line-height: 1.5;
+      color: var(--sh-red);
+    }
+
+  }
+
+  .ol-input[required]~.ol-required {
+    display: inline-block;
+  }
+
+  .ol-feedback {
+    background-color: var(--sh-red);
+    color: var(--sh-white);
+    /* inset-block-end: calc(-1 * var(--sh-space, 1.6rem)); */
+    margin-inline-start: 1rem;
+    margin-block-start: -1 * @halfspace;
+    float: inline-start;
+    z-index: 100;
+    position: relative;
+    border-radius: var(--sh-radius);
+    padding-inline: var(--sh-halfspace);
+    padding-block: @halfspace * 0.5;
+    white-space: nowrap;
+    display: none;
+    width: fit-content;
+    font-size: 85%;
+  }
+
+  /* floating label */
+  .ol-label {
+    position: absolute;
+    inset-block-start: var(--sh-halfspace);
+    inset-inline-start: 9px;
+    padding: 0 3px;
+    color: var(--sh-text-light, #959595);
+    cursor: auto;
+    transform-origin: left;
+    transition: transform 0.3s;
+    transform: translateY(-100%) scale(0.8);
+    /* a touch to hide the border behind the floating label */
+    background-image: linear-gradient(0deg, var(--sh-white) 90%, transparent 90%);
+  }
+
+  /* when input is empty */
+  .ol-label:has(~ .ol-input:placeholder-shown) {
+    transform: none;
+  }
+
+  /* when input is focused */
+  .ol-label:has(~ .ol-input:focus-visible) {
+    transform: translateY(-100%) scale(0.8);
+  }
+
+
+  .ol-help {
+    color: var(--sh-text-light);
+    font-size: 90%;
+    display: block;
+    margin-block-start: var(--sh-halfspace);
+    text-align: end;
+  }
+
+  .ol-help:empty {
+    display: none;
+  }
+
+}
+
+
+.was-validated {
+  .ol-field {
+    .ol-input:invalid,
+    &.ol-invalid-form .ol-input {
+      box-shadow: inset 0 0 0 1px var(--sh-red);
+      border-color: var(--sh-red);
+    }
+
+    .ol-input:invalid~.ol-feedback {
+      display: block;
+    }
+
+    .ol-label:has(~ .ol-input:invalid),
+    &.ol-invalid-form .ol-label {
+      color: var(--sh-red);
+    }
+
+  }
+
+}
+
+.ol-form {
+  .ol-form-feedback {
+    display: none;
+  }
+
+  &.was-validated .ol-form-feedback {
+    display: block;
+
+  }
+}
+
+/* checkboxes and radios */
+/* too smart: */
+.ol-field.ol-checkbox {
+  .ol-label {
+    /* important to remove transform in all cases */
+    transform: none!important;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    padding-inline-start: 1.8rem;
+    position: relative;
+    display: inline-block;
+    background: none;
+    cursor: pointer;
+  }
+  .ol-input {
+    position: absolute;
+    inset-inline-start: 0;
+  }
+  .ol-feedback {
+    float: none;
+    margin-block-start: 0;
+  }
+  .ol-required {
+    position: static;
+  }
+}
+
+.ol-field.ol-hidden {
+  .ol-label {
+    display: none;
+  }
+  .ol-input[required] ~ .ol-required {
+    display: none;
+  }
+  .ol-feedback {
+    float: none;
+    margin-block-start: 0;
+    margin-inline-start: 0;
+  }
+}
+
+.ol-field.ol-static {
+
+  /* force floating label even if empty */
+  .ol-label:has(~ .ol-input:placeholder-shown) {
+    transform: translateY(-100%) scale(0.8);
+  }
+
+}
+

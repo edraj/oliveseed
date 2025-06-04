@@ -1,0 +1,40 @@
+{
+  "name": "oliveseed",
+  "version": "0.0.2",
+  "scripts": {
+    "start": "vite dev",
+    "build": "vite build && npm run prepack",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync || echo ''",
+    "prepack": "svelte-kit sync",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "install:dep": "npm install @edraj/tsdmart rxjs bits-ui --save",
+    "install:dev": "npm install @sveltejs/adapter-auto @sveltejs/adapter-static @sveltejs/package @sveltejs/vite-plugin-svelte @types/node autoprefixer globals postcss svelte-check typescript vite @sveltejs/kit svelte just-clone --save-dev",
+    "install:all": "npm run install:dep && npm run install:dev"
+  },
+  "type": "module",
+  "dependencies": {
+    "@edraj/tsdmart": "^2.2.0",
+    "bits-ui": "^2.1.0",
+    "rxjs": "^7.8.2",
+    "shut": "^7.0.6"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^6.0.1",
+    "@sveltejs/adapter-static": "^3.0.8",
+    "@sveltejs/kit": "^2.21.1",
+    "@sveltejs/package": "^2.3.11",
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@types/node": "^22.15.21",
+    "@typescript-eslint/eslint-plugin": "^8.33.0",
+    "autoprefixer": "^10.4.21",
+    "globals": "^16.2.0",
+    "just-clone": "^6.2.0",
+    "postcss": "^8.5.3",
+    "svelte": "^5.33.3",
+    "svelte-check": "^4.2.1",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
+}

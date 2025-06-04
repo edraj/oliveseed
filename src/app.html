@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="$lang">
+
+<head>
+  <!-- TODO: add gtm here -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="%sveltekit.assets%/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <script src="%sveltekit.assets%/js/olive.js"></script>
+  <!-- <script src="%sveltekit.assets%/js/language.js"></script> -->
+  <script src="%sveltekit.assets%/locale/ol-$lang.js"></script>
+
+  <link rel="stylesheet" href="%sveltekit.assets%/css/olive.css">
+
+  <!-- #LTR -->
+  <link href="//fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,200..800;1,300..9=500&display=swap" rel="stylesheet">
+  <!-- #ENDLTR -->
+  <!-- #RTL -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="%sveltekit.assets%/css/olive.rtl.css" name="rtl">
+  <!-- #ENDRTL -->
+
+
+  %sveltekit.head%
+</head>
+
+<body>
+
+	<div style="display: contents">%sveltekit.body%</div>
+</body>
+<!-- hello world -->
+</html>

@@ -1,0 +1,13 @@
+http://localhost:2015 {
+	root * build
+	encode
+	file_server
+	templates
+
+	@lang path_regexp ^/(en|ar)(/.*)?$
+
+	handle @lang {
+		vars lang_code {re.lang.1}
+		try_files {path} /index.html
+	}
+}
