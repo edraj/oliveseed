@@ -22,15 +22,14 @@ export const Config = {
     Timeout: 365,
   },
   Auth: {
-    userAccessKey: "olive.user",
+    userAccessKey: "user",
     redirectKey: "redirectUrl",
-    loginRoute: "/login",
-    authUserKey: "authUser",
+    loginRoute: "/login"
   },
   Cache: {
     Timeout: 24,
     Key: "oliva.cache",
-    ResetKey: "olive.20250101",
+    ResetKey: "20250101",
   },
   API: {
     apiRoot: import.meta.env.VITE_DMART_URL, // FIXME: move to environment
