@@ -29,4 +29,8 @@ export class AuthService {
     const res = await httpClient.get_profile();
     return Profile.NewInstance(mapResponse(res));
   }
+
+  static async Logout() {
+    return await httpClient.logout();
+  }
 }

@@ -6,13 +6,15 @@
   import Language from "$src/shared/Language.svelte";
   import { translate } from "$utils/resources";
   import { routeLink } from "$utils/route";
+  import { AuthService } from '../../auth/auth.service.js';
   let { children, data } = $props();
   const user = AuthState.GetUser();
 
   rootRecordList.SetList(data.records);
 
-  const logout = (e) => {
+  const logout = async (e) => {
     e.preventDefault();
+    await AuthService.Logout();
     AuthState.Logout();
 
     goto(routeLink(Config.Auth.loginRoute));

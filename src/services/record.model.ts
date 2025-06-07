@@ -1,11 +1,8 @@
 import { Config } from "$src/config";
 import { Translation } from "$src/utils/translation.model";
 import { makeDate, toISODateString } from "$utils/common";
-import {
-  ContentType,
-  ResourceType,
-  type ActionRequestRecord,
-} from "@edraj/tsdmart";
+import { EnumContentType, EnumResourceType, type IAttributes, type IRecord } from '@edraj/tsdmart/client';
+
 
 export interface IDmartRecord {
   displayname?: string;
@@ -30,9 +27,9 @@ export class DmartRecord {
     if (!data?.length) return [];
     return data.map(DmartRecord.NewInstance);
   }
-  static PrepPost(record: Partial<IDmartRecord>): ActionRequestRecord {
+  static PrepPost(record: Partial<IDmartRecord>): IRecord<IAttributes> {
     return {
-      resource_type: ResourceType.content,
+      resource_type: EnumResourceType.content,
       shortname: record.shortname,
       subpath: Config.API.records.list,
       attributes: {
@@ -44,7 +41,7 @@ export class DmartRecord {
           en: record.description,
         },
         payload: {
-          content_type: ContentType.json,
+          content_type: EnumContentType.json,
           body: {
             // example extra prop
             date: toISODateString(record.date),

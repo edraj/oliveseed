@@ -1,14 +1,14 @@
 import httpClient from '$core/http.service';
 import { Config } from "$src/config";
 import { mapRecords } from "$src/core/response.model";
-import { QueryType, RequestType } from "@edraj/tsdmart";
+import { EnumQueryType, EnumRequestType } from '@edraj/tsdmart/client';
 import { DmartRecord, type IDmartRecord } from "./record.model";
 
 export class RecordService {
   static async GetRecords(): Promise<IDmartRecord[]> {
     // create a search query
     const res = await httpClient.query({
-      type: QueryType.search,
+      type: EnumQueryType.search,
       retrieve_attachments: true,
       retrieve_json_payload: true,
       space_name: Config.API.defaultSpace,
@@ -22,7 +22,7 @@ export class RecordService {
   static async CreateRecord(record: Partial<IDmartRecord>): Promise<void> {
     const req: any = {
       space_name: Config.API.defaultSpace,
-      request_type: RequestType.create,
+      request_type: EnumRequestType.create,
       records: [DmartRecord.PrepPost(record)],
     };
     await httpClient.request(req);
@@ -32,7 +32,7 @@ export class RecordService {
   static async UpdateRecord(record: IDmartRecord): Promise<void> {
     const req: any = {
       space_name: Config.API.defaultSpace,
-      request_type: RequestType.update,
+      request_type: EnumRequestType.update,
       records: [DmartRecord.PrepPost(record)],
     };
     await httpClient.request(req);
@@ -42,7 +42,7 @@ export class RecordService {
   static async DeleteRecord(record: IDmartRecord): Promise<void> {
     const req: any = {
       space_name: Config.API.defaultSpace,
-      request_type: RequestType.delete,
+      request_type: EnumRequestType.delete,
       records: [DmartRecord.PrepPost(record)],
     };
 
