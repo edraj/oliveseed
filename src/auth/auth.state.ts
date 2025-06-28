@@ -16,9 +16,30 @@ export class AuthState {
     return SiteStorage.getItem(Config.Auth.redirectKey);
   }
   static set redirectUrl(value: string) {
-    // remove language
-    SiteStorage.setItem(Config.Auth.redirectKey, value.replace(Res.Re, ""));
+  if (!value) {
+    SiteStorage.removeItem(Config.Auth.redirectKey);
+  } else {
+      // remove language
+      SiteStorage.setItem(Config.Auth.redirectKey, value?.replace(Res.Re, ''));
+    }
   }
+
+
+  static CheckAuth(user: IAuthUser) {
+    if (!user || !user.accessToken) {
+      return false;
+    }
+
+    if (Date.now() > user.expiresAt) {
+      return false;
+    }
+    return true;
+  }
+  static GetToken() {
+    const _auth = AuthState.currentState;
+    return AuthState.CheckAuth(_auth) ? _auth.accessToken : null;
+  }
+
 
   static get currentState() {
     if (browser) {
@@ -52,11 +73,16 @@ export class AuthState {
     // get writable
     return get(AuthState.profile);
   }
-  static Logout() {
-    if (browser) {
-      SiteStorage.removeItem(Config.Auth.userAccessKey);
-    }
+  static Logout(soft: boolean = false) {
+    SiteStorage.removeItem(Config.Auth.userAccessKey);
+    // also need to clean third party cookie from service
+
     AuthState.authUser.set(null);
     AuthState.profile.set(null);
+
+    // sometimes the logout is soft (due to server timeout), keep redirect url
+    if (!soft) {
+      AuthState.redirectUrl = null;
+    }
   }
 }

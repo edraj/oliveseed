@@ -31,23 +31,34 @@ export const translate = (
   return Res.Get(res, original);
 };
 
+export interface IResLanguage {
+  name: string;
+  isRtl?: boolean;
+  dbvalue: string;
+  display: string;
+}
+
 export class Res {
   private static get keys(): any {
+    // TODO: get keys from server
+
     return _global.cl?.resources.keys || { NoRes: "" };
+  }
+  public static setKeys(value: any) {
+    _global.cl.resources.keys = { ...Res.keys, ...value };
   }
 
   public static get language(): string {
     return _global.cl?.resources.language || Config.Res.defaultLanguage;
   }
 
-  public static get currentLanguage(): {
-    name: string;
-    display: string;
-    isRtl?: boolean;
-  } {
-    return Config.Res.languages.find((n) => n.name === Res.language);
+  public static get currentLanguage(): IResLanguage {
+    return Res.getLanguage(Res.language);
   }
 
+  public static getLanguage(lang: string): IResLanguage | null {
+    return Config.Res.languages.find((n) => n.name === lang);
+  }
   public static get Re(): any {
     const langages = Config.Res.languages.map((l) => l.name);
     return new RegExp(`^\/(${langages.join("|")})`, "gim");
@@ -93,7 +104,8 @@ export class Res {
   public static Select(key: string, select: any, fallback?: string): string {
     // find the match in resources
     const keys = Res.keys;
+    const _fallback = fallback || select;
 
-    return (keys[key] && keys[key][select]) || fallback || keys.NoRes;
+    return (keys[key] && keys[key][select]) || _fallback || keys.NoRes;
   }
 }

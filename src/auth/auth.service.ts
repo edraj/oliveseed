@@ -1,18 +1,18 @@
-import httpClient from "$core/http.service";
-import { mapResponse } from "$src/core/response.model";
-import { AuthUser, type IAuthUser } from "./auth.model";
-import { AuthState } from "./auth.state";
-import { Profile } from "./profile.model";
+import { mapResponse } from '$src/core/response.model';
+import { Config } from '../config';
+import httpClient from '../core/http.service';
+import { AuthUser, type IAuthUser } from './auth.model';
+import { AuthState } from './auth.state';
+import { Profile } from './profile.model';
 
 export class AuthService {
   static async Login(username: string, password: string): Promise<IAuthUser> {
     // call api
-    const res = await httpClient.login(username, password);
+    const res = await httpClient.post(Config.API.auth.login, { shortname: username, password });
 
-    // map
     const user = AuthUser.NewInstance(mapResponse(res));
+    AuthState.SaveSession(user);
 
-    // since we will always need profile, call GetUser here
     const profile = await AuthService.GetUser();
 
     const _authUser: IAuthUser = {
@@ -20,17 +20,16 @@ export class AuthService {
       payload: { ...user.payload, ...profile },
     };
 
-    // save session here
+    // save session again
     return AuthState.SaveSession(_authUser);
   }
 
   static async GetUser() {
-    // careful, this depends on already logged in user and saved in cross domain cookie
-    const res = await httpClient.get_profile();
+    const res = await httpClient.get(Config.API.auth.profile);
     return Profile.NewInstance(mapResponse(res));
   }
 
   static async Logout() {
-    return await httpClient.logout();
+    return await httpClient.post(Config.API.auth.logout);
   }
 }

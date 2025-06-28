@@ -1,12 +1,15 @@
+import { AuthInterceptor } from '$src/auth/auth.interceptor';
+import { Config } from '$src/config';
+import { ErrorInterctor } from '$src/core/error.interceptor';
+import axios from 'axios';
+import { HttpInterctor } from './http.interceptors';
 
-import { Config } from "$src/config";
-import { DmartClient } from "@edraj/tsdmart/client";
-import { HttpInterctor } from "./http.interceptors";
-
-const httpClient = new DmartClient({
-    baseURL: Config.API.apiRoot
+const httpClient = axios.create({
+  baseURL: Config.API.apiRoot,
 });
 
-HttpInterctor(httpClient.client);
+AuthInterceptor(httpClient);
+HttpInterctor(httpClient);
+ErrorInterctor(httpClient);
 
 export default httpClient;

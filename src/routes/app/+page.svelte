@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Toast } from "$lib/toast/toast.svelte";
+  import { Toast } from "$lib/toast/toast.state";
   import { AuthState } from "$src/auth/auth.state";
   const user = AuthState.GetUser();
 

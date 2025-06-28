@@ -9,9 +9,31 @@
     "prepack": "svelte-kit sync",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "install:dep": "npm install @edraj/tsdmart rxjs bits-ui --save",
+    "install:dep": "npm install axios rxjs bits-ui --save",
     "install:dev": "npm install @sveltejs/adapter-auto @sveltejs/adapter-static @sveltejs/package @sveltejs/vite-plugin-svelte @types/node autoprefixer globals postcss svelte-check typescript vite @sveltejs/kit svelte just-clone @internationalized/date --save-dev",
     "install:all": "npm run install:dep && npm run install:dev"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "bits-ui": "^2.8.10",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@internationalized/date": "^3.8.2",
+    "@sveltejs/adapter-auto": "^6.0.1",
+    "@sveltejs/adapter-static": "^3.0.8",
+    "@sveltejs/kit": "^2.22.2",
+    "@sveltejs/package": "^2.3.12",
+    "@sveltejs/vite-plugin-svelte": "^5.1.0",
+    "@types/node": "^24.0.6",
+    "autoprefixer": "^10.4.21",
+    "globals": "^16.2.0",
+    "just-clone": "^6.2.0",
+    "postcss": "^8.5.6",
+    "svelte": "^5.34.8",
+    "svelte-check": "^4.2.2",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
 }

@@ -1,5 +1,25 @@
 {
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
+  },
+  "typescript.preferences.quoteStyle": "single",
+  "prettier.quoteProps": "consistent",
+  "prettier.embeddedLanguageFormatting": "auto",
+  "editor.formatOnSaveMode": "modifications",
+  "editor.formatOnSave": true,
+  "prettier.bracketSameLine": true,
+  "prettier.jsxSingleQuote": true,
+  "prettier.printWidth": 120,
+  "prettier.singleQuote": true,
+  "svelte.plugin.svelte.compilerWarnings": {
+    "a11y_missing_attribute": "ignore",
+    "a11y_no_static_element_interactions": "ignore",
+    "a11y_click_events_have_key_events": "ignore",
+    "a11y_consider_explicit_label": "ignore",
+    "a11y_label_has_associated_control": "ignore"
+  },
+  "svelte.plugin.svelte.format.config.singleQuote": true,
+  "[html]": {
+    "editor.formatOnSave": false
   }
 }

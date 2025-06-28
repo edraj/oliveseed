@@ -24,6 +24,11 @@ export const getCookie = (key: string) => {
 }
 
 
+export const cleanPath = (path: string) => {
+  // remove multiple slashes into one
+  return path.replace(/\/+/g, '/');
+};
+
 
 export const generateShortName = (displayname: string) => {
   // replace all non-alphanumeric characters with underscore
@@ -129,55 +134,6 @@ export const toISODateString = (date: Date): string => {
   if (!date) { return ''; }
   return date.toISOString().split('T')[0];
 }
-
-
-
-/*
-function copied from https://github.com/angus-c/just/blob/master/packages/collection-clone/index.js
-Deep clones all properties except functions
-var arr = [1, 2, 3];
-var subObj = {aa: 1};
-var obj = {a: 3, b: 5, c: arr, d: subObj};
-var objClone = clone(obj);
-arr.push(4);
-subObj.bb = 2;
-obj; // {a: 3, b: 5, c: [1, 2, 3, 4], d: {aa: 1}}
-objClone; // {a: 3, b: 5, c: [1, 2, 3], d: {aa: 1, bb: 2}}
-*/
-const getRegExpFlags = (regExp: any) => {
-  if (typeof regExp.source.flags == 'string') {
-    return regExp.source.flags;
-  } else {
-    const flags = [];
-    regExp.global && flags.push('g');
-    regExp.ignoreCase && flags.push('i');
-    regExp.multiline && flags.push('m');
-    regExp.sticky && flags.push('y');
-    regExp.unicode && flags.push('u');
-    return flags.join('');
-  }
-};
-export const clone = (obj: any) => {
-  if (typeof obj == 'function') {
-    return obj;
-  }
-  const result: any = Array.isArray(obj) ? [] : {};
-  for (const key in obj) {
-    // include prototype properties
-    const value = obj[key];
-    const type = {}.toString.call(value).slice(8, -1);
-    if (type == 'Array' || type == 'Object') {
-      result[key] = clone(value);
-    } else if (type == 'Date') {
-      result[key] = new Date(value.getTime());
-    } else if (type == 'RegExp') {
-      result[key] = RegExp(value.source, getRegExpFlags(value));
-    } else {
-      result[key] = value;
-    }
-  }
-  return result;
-};
 
 
 export const hasMore = (total: number, size: number, currentPage: number): boolean => {

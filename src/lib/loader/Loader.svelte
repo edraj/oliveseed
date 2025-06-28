@@ -1,17 +1,19 @@
 <script lang="ts">
-  import { afterNavigate, beforeNavigate } from "$app/navigation";
+  import { afterNavigate, beforeNavigate } from '$app/navigation';
+  import { Loader } from '$src/lib/loader/loader.state';
+  import { map } from 'rxjs';
 
-  let loading = false;
+  let show = Loader.stateItem$.pipe(map((state) => (state ? state.show : false)));
 
   afterNavigate((navigation) => {
-    loading = false;
+    Loader.emitUrl(navigation.to.url.pathname);
   });
   beforeNavigate((navigation) => {
-    loading = true;
+    Loader.emitUrl(navigation.from.url.pathname);
   });
 </script>
 
-{#if loading}
+{#if $show}
   <div class="httploader">
     <div class="line"></div>
     <div class="subline inc"></div>

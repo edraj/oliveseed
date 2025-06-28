@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Loader from "$lib/Loader.svelte";
+  import Loader from "$lib/loader/Loader.svelte";
   import { AuthState } from "$src/auth/auth.state";
   import "../app.css";
 

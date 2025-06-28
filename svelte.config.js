@@ -25,6 +25,10 @@ const config = {
       appTemplate: process.env.NODE_ENV === "development" ? "src/app.html" : "src/placeholder.html"
     }
   },
+  onwarn: (warning, handler) => {
+    if (warning.code.includes("a11y")) return;
+    handler(warning);
+  },
   extensions: [".svelte"],
 
 };

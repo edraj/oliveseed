@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import OlInput from "$lib/input/OlInput.svelte";
-  import { Toast } from "$lib/toast/toast.svelte";
+  import { Toast } from "$lib/toast/toast.state";
   import { AuthService } from "$src/auth/auth.service";
   import { AuthState } from "$src/auth/auth.state";
   import { Config } from "$src/config";
@@ -23,11 +23,8 @@
     }
 
     AuthService.Login(username, password)
-      .catch((e) => {
-        Toast.HandleUiError(e);
-      })
       .then((_) => {
-        goto(routeLink(AuthState.redirectUrl || Config.Basic.defaultRoute));
+        goto(routeLink(AuthState.redirectUrl || Config.Basic.appRoot));
       });
   }
 </script>

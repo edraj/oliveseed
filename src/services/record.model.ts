@@ -1,23 +1,20 @@
 import { Config } from "$src/config";
-import { Translation } from "$src/utils/translation.model";
+import { Resource, type IResource } from '$src/services/resource.model';
 import { makeDate, toISODateString } from "$utils/common";
-import { EnumContentType, EnumResourceType, type IAttributes, type IRecord } from '@edraj/tsdmart/client';
+import { EnumContentType, EnumResourceType } from '../utils/param.model';
 
 
-export interface IDmartRecord {
-  displayname?: string;
-  shortname: string;
-  description?: string;
+export interface IDmartRecord extends IResource {
   date?: Date; // example props, add all that u need
   color?: string;
 }
 
 export class DmartRecord {
   static NewInstance(data: any): IDmartRecord {
+
+    const res = Resource.NewInstance(data);
     return {
-      shortname: data.shortname,
-      displayname: Translation.MapLanguage(data.displayname),
-      description: Translation.MapLanguage(data.description),
+      ...res,
       date: makeDate(data.date),
       color: data.color,
     };
@@ -27,7 +24,7 @@ export class DmartRecord {
     if (!data?.length) return [];
     return data.map(DmartRecord.NewInstance);
   }
-  static PrepPost(record: Partial<IDmartRecord>): IRecord<IAttributes> {
+  static PrepPost(record: Partial<IDmartRecord>): any {
     return {
       resource_type: EnumResourceType.content,
       shortname: record.shortname,

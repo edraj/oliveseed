@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{placeholder "http.vars.lang_code"}}">
+<html lang="{{placeholder "http.vars.lang_code"}}" dir="{{placeholder "http.vars.content_dir"}}">
 
 <head>
   <!-- TODO: add gtm here -->
@@ -10,18 +10,18 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <script src="%sveltekit.assets%/js/olive.js"></script>
-  <!-- <script src="%sveltekit.assets%/js/language.js"></script> -->
   <script src="%sveltekit.assets%/locale/ol-{{placeholder "http.vars.lang_code"}}.js"></script>
 
   <link rel="stylesheet" href="%sveltekit.assets%/css/olive.css">
 
-  {{ if eq (placeholder "http.vars.lang_code") "en" }}
-  <link href="//fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,200..800;1,300..900&display=swap" rel="stylesheet">
+
+  {{ if eq (placeholder "http.vars.content_dir") "ltr" }}
+  <link href="//fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,200..800;1,300..900&display=swap"
+    rel="stylesheet">
   {{ end }}
 
-  {{if eq (placeholder "http.vars.lang_code") "ar"}}
+  {{if eq (placeholder "http.vars.content_dir") "rtl"}}
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300..800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/olive.rtl.css" name="rtl">
   {{ end }}
 
 

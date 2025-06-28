@@ -2,7 +2,7 @@
   import { goto } from "$app/navigation";
   import { AuthState } from "$src/auth/auth.state";
   import { Config } from "$src/config";
-  import { rootRecordList } from "$src/services/record.state.svelte";
+  import { rootRecordList } from "$src/services/record.state.js";
   import Language from "$src/shared/Language.svelte";
   import { translate } from "$utils/resources";
   import { routeLink } from "$utils/route";

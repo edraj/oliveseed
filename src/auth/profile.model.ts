@@ -1,4 +1,4 @@
-import { Translation } from "$src/utils/translation.model";
+import { WebResource } from '$src/utils/webresources.model';
 
 export enum EnumRole {
   ADMIN = "super_admin",
@@ -26,7 +26,7 @@ export class Profile {
   static NewInstance(data: any): IProfile {
     return {
       shortname: data.shortname,
-      displayname: Translation.MapLanguage(data.displayname),
+      displayname: WebResource.MapLanguage(data.displayname),
       email: data.email,
       mobile: data.msisdn,
       role: Profile.MapRole(data.roles),

@@ -5,7 +5,7 @@ export default defineConfig({
 
   plugins: [sveltekit()],
   server: {
-    port: 5300,
+    port: 5500,
     hmr: false,
     watch: { usePolling: false }
   }

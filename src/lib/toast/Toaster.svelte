@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Toast } from "./toast.svelte";
+  import { Toast } from "./toast.state";
   const toast = Toast.stateItem$;
 </script>
 

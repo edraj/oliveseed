@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { rootRecordList } from "$src/services/record.state.svelte";
+  import { rootRecordList } from "$src/services/record.state";
   import { map } from "rxjs";
 
   // this might be a direct api call

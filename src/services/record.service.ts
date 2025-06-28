@@ -1,52 +1,45 @@
-import httpClient from '$core/http.service';
 import { Config } from "$src/config";
-import { mapRecords } from "$src/core/response.model";
-import { EnumQueryType, EnumRequestType } from '@edraj/tsdmart/client';
+import httpClient from '$src/core/http.service';
+import { EnumQueryType, EnumRequestType, Param, type IParam } from '../utils/param.model';
 import { DmartRecord, type IDmartRecord } from "./record.model";
+import { ResourceService } from './resource.service';
 
 export class RecordService {
+
+
   static async GetRecords(): Promise<IDmartRecord[]> {
     // create a search query
-    const res = await httpClient.query({
+    const params: IParam = {
       type: EnumQueryType.search,
-      retrieve_attachments: true,
-      retrieve_json_payload: true,
-      space_name: Config.API.defaultSpace,
-      limit: 1000,
+      space: Config.API.defaultSpace,
       subpath: Config.API.records.list,
-      search: "",
-    });
-    return DmartRecord.NewInstances(mapRecords(res)?.records);
+      size: 1000,
+      withPayload: true,
+      withAttachments: true,
+    };
+    const res = await ResourceService.GetResources(params);
+    return DmartRecord.NewInstances(res);
   }
 
-  static async CreateRecord(record: Partial<IDmartRecord>): Promise<void> {
-    const req: any = {
-      space_name: Config.API.defaultSpace,
-      request_type: EnumRequestType.create,
-      records: [DmartRecord.PrepPost(record)],
-    };
-    await httpClient.request(req);
-    return null;
+  static async CreateRecord(record: Partial<IDmartRecord>): Promise<IDmartRecord> {
+
+    const res = await ResourceService.CreateResource(record);
+    return res;
   }
 
   static async UpdateRecord(record: IDmartRecord): Promise<void> {
-    const req: any = {
-      space_name: Config.API.defaultSpace,
-      request_type: EnumRequestType.update,
+    const req: any = Param.MapRequest({
+      space: Config.API.defaultSpace,
+      type: EnumRequestType.update,
       records: [DmartRecord.PrepPost(record)],
-    };
-    await httpClient.request(req);
+    });
+
+    await httpClient.post(Config.API.resource.request, req);
     return null;
   }
 
   static async DeleteRecord(record: IDmartRecord): Promise<void> {
-    const req: any = {
-      space_name: Config.API.defaultSpace,
-      request_type: EnumRequestType.delete,
-      records: [DmartRecord.PrepPost(record)],
-    };
-
-    await httpClient.request(req);
+    await ResourceService.DeleteResource(record);
     return null;
   }
 }
