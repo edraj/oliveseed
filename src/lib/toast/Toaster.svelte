@@ -3,7 +3,7 @@
   const toast = Toast.stateItem$;
 </script>
 
-<div class="{$toast.visible ? 'inview' : ''} {$toast.css} {$toast.extracss}">
+<div class="toast {$toast.visible ? 'inview' : ''} {$toast.css} {$toast.extracss}">
   <div class="text">{$toast.text}</div>
   {#if $toast.buttons?.length}
     <div class="buttons">
@@ -13,7 +13,7 @@
     </div>
   {/if}
 </div>
-
+<!-- WATCH: Remove sh vars in new project -->
 <style>
   .toast {
     display: flex;

@@ -5,26 +5,31 @@
   import { AuthService } from "$src/auth/auth.service";
   import { AuthState } from "$src/auth/auth.state";
   import { Config } from "$src/config";
+  import { ValidateForm } from "$src/lib/input/form";
   import { routeLink } from "$utils/route";
 
-  let username = $state("");
-  let password = $state("");
+  let formState = $state({
+    username: null,
+    password: null,
+  });
   let showPassword = $state(false);
 
-  async function handleLogin(event: Event) {
+  async function handleLogin(e: Event) {
     Toast.Hide();
 
     // these following lines can be automated
-    event.preventDefault();
-    this.classList.add("was-validated");
-
-    if (!this.checkValidity()) {
+    e.preventDefault();
+    if (!ValidateForm(e.target as HTMLFormElement)) {
       return;
     }
-
-    AuthService.Login(username, password)
+    AuthService.Login(formState.username, formState.password)
       .then((_) => {
         goto(routeLink(AuthState.redirectUrl || Config.Basic.appRoot));
+      })
+      .catch((e) => {
+        if (e === Config.Auth.resetCode) {
+          goto(routeLink(Config.Auth.resetRoute));
+        }
       });
   }
 </script>
@@ -38,7 +43,7 @@
             <input
               class="w100 {css}"
               type="text"
-              bind:value={username}
+              bind:value={formState.username}
               {placeholder}
               required
               autocomplete="email"
@@ -52,7 +57,7 @@
               <input
                 class="w100 {css}"
                 type={showPassword ? "text" : "password"}
-                bind:value={password}
+                bind:value={formState.password}
                 {placeholder}
                 required
                 autocomplete="current-password"

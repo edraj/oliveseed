@@ -9,7 +9,9 @@ import { routeLink } from "$utils/route";
 export const load = async (_) => {
   //  a login guard is a function that redirects to dashboard if user exists
   if (browser) {
-    if (AuthState.currentState) {
+    if (AuthState.ForceChange) {
+      goto(routeLink(Config.Auth.resetRoute));
+    } else {
       goto(routeLink(Config.Basic.appRoot));
     }
   }

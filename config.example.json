@@ -1,0 +1,38 @@
+{
+  "API": {
+    "apiRoot": "https://evd-uat.iq.zain.com/dmart",
+    "queryTimeout": 3000
+  },
+  "Auth": {
+    "userAccessKey": "user"
+  },
+  "Cache": {
+    "Timeout": 48,
+    "Key": "oliva.cache",
+    "ResetKey": "20250609"
+  },
+  "isServed": true,
+  "Res": {
+    "languages": [
+      {
+        "name": "en",
+        "display": "English",
+        "isRtl": false,
+        "dbvalue": "english"
+      },
+      {
+        "name": "ar",
+        "display": "عربي",
+        "isRtl": true,
+        "dbvalue": "arabic"
+      },
+      {
+        "name": "ku",
+        "display": "کوردی",
+        "isRtl": true,
+        "dbvalue": "kurdish"
+      }
+    ],
+    "cookieName": "ol-lang"
+  }
+}

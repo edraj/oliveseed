@@ -1,8 +1,21 @@
 import { browser } from "$app/environment";
 import { Config } from "$src/config";
+import { ConfigService } from '$src/data/config.service';
 import { Res } from "$utils/resources";
 
 export class StorageService {
+  private static instance: StorageService | null = null;
+
+
+  static get SiteStorage(): StorageService {
+    if (this.instance) {
+      return this.instance;
+    }
+    const _instance = new StorageService();
+    this.instance = _instance;
+    return _instance;
+  }
+
   private get ourStorage(): Storage {
     if (browser) {
       return localStorage;
@@ -25,19 +38,20 @@ export class StorageService {
   }
 
   private getKey(key: string, withLanguage = false): string {
-    return `${Config.Cache.Key}${
+    return `${ConfigService.Config.Cache.Key}${
       withLanguage ? "." + Res.language : ""
     }.${key}`;
   }
 
   private _setResetKey(): void {
-    const _key = this.getKey(Config.Cache.ResetKey);
+    const _key = this.getKey(ConfigService.Config.Cache.ResetKey);
     const _reset: any = this.ourStorage.getItem(_key);
     // if it does not exist, it must have changed in config, remove everything
     if (!_reset || _reset !== "true") {
       this.clear();
       this.ourStorage.setItem(_key, "true");
     }
+    _seqlog(_key);
   }
 
   setItem(
@@ -102,7 +116,7 @@ export class StorageService {
 
     for (let i = 0; i < this.ourStorage.length; i++) {
       const name = this.ourStorage.key(i);
-      if (name?.indexOf(Config.Cache.Key) === 0) {
+      if (name?.indexOf(ConfigService.Config.Cache.Key) === 0) {
         // delay
         toClear.push(name);
       }
@@ -111,4 +125,3 @@ export class StorageService {
   }
 }
 
-export const SiteStorage = new StorageService();

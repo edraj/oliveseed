@@ -1,5 +1,5 @@
+import { HttpService } from '$src/core/http.service';
 import { Config } from '../config';
-import httpClient from '../core/http.service';
 import { mapRecords, mapResponse } from '../core/response.model';
 import { EnumQueryType, Param, type IParam } from '../utils/param.model';
 import { Res } from '../utils/resources';
@@ -10,7 +10,7 @@ export class PageService {
     // create a search query
     const params: IParam = {
       type: EnumQueryType.search,
-      space: Config.API.contentSpace,
+      space: Config.API.public.space,
       subpath: '/' + Res.language,
       size: 1000,
       withPayload: false,
@@ -18,7 +18,7 @@ export class PageService {
       keyword: ''
     };
 
-    const res = await httpClient.post(Config.API.public.query, Param.MapQueryParams(params));
+    const res = await HttpService.httpClient.post(Config.API.public.query, Param.MapQueryParams(params));
 
     return Page.NewInstances(mapRecords(res));
   }
@@ -27,7 +27,7 @@ export class PageService {
     // managed/entry/:resource/:space/:subpath?:options
     const params: IParam = {
       type: EnumQueryType.search,
-      space: Config.API.contentSpace,
+      space: Config.API.public.space,
       subpath: '/' + Res.language,
       size: 1,
       withPayload: true,
@@ -36,7 +36,7 @@ export class PageService {
       keyword: '',
     };
 
-    const res = await httpClient.post(Config.API.public.query, Param.MapQueryParams(params));
+    const res = await HttpService.httpClient.post(Config.API.public.query, Param.MapQueryParams(params));
 
     return Page.NewInstance(mapResponse(res));
   }

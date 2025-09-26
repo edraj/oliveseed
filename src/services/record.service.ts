@@ -1,5 +1,5 @@
 import { Config } from "$src/config";
-import httpClient from '$src/core/http.service';
+import { HttpService } from '$src/core/http.service';
 import { EnumQueryType, EnumRequestType, Param, type IParam } from '../utils/param.model';
 import { DmartRecord, type IDmartRecord } from "./record.model";
 import { ResourceService } from './resource.service';
@@ -34,7 +34,7 @@ export class RecordService {
       records: [DmartRecord.PrepPost(record)],
     });
 
-    await httpClient.post(Config.API.resource.request, req);
+    await HttpService.httpClient.post(Config.API.resource.request, req);
     return null;
   }
 

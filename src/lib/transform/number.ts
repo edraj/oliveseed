@@ -13,3 +13,6 @@ export const percentage = (n: number): string => {
 export const prettyPrice = (n: number): string => {
   return Intl.NumberFormat(Res.language, { currency: 'IQD', style: 'currency' }).format(n);
 };
+export const prettyNumber = (n: number): string => {
+  return Intl.NumberFormat(Res.language).format(n);
+};

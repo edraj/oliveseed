@@ -6,7 +6,6 @@ export class LoaderState extends StateService<ILoaderState> {
 
   constructor() {
     super();
-    _seqlog('loader srvice construct');
     this.SetState({
       show: false, source: null, url: null
     });

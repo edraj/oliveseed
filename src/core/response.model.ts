@@ -29,13 +29,6 @@ export const mapResponse = (data: any): any => {
   return mapRecord(r);
 };
 
-export const mapResource = (data: any): any => {
-  // use with the simplest form of data
-  return {
-    ...data,
-    ...data.payload,
-  };
-};
 
 export const mapRecords = (data: any): any[] => {
   const l = data.records?.length;
@@ -43,19 +36,8 @@ export const mapRecords = (data: any): any[] => {
   return data.records.map(mapRecord);
 };
 
-export const mapAttachment = (data: any): any => {
-  if (!data?.attachments?.json?.length) return null;
-
-  // inside json[0] it has attrobutes.payload.body -> array of elements
-  const root = data.attachments.json[0];
-
-  return root.attributes.payload.body;
-};
 
 export const mapAttachments = (data: any): any[] => {
-  if (!data?.attachments?.json?.length) return null;
-
-  return data.attachments.json.map((n) => {
-    return { ...n.attributes, ...n };
-  });
+  if (!data?.length) return null;
+  return data.map(mapRecord);
 };

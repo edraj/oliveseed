@@ -1,15 +1,39 @@
 import { AuthInterceptor } from '$src/auth/auth.interceptor';
-import { Config } from '$src/config';
 import { ErrorInterctor } from '$src/core/error.interceptor';
-import axios from 'axios';
+import { EnumErrorNamespace } from '$src/core/error.model';
+import { ConfigService } from '$src/data/config.service';
+import axios, { type AxiosInstance } from 'axios';
 import { HttpInterctor } from './http.interceptors';
 
-const httpClient = axios.create({
-  baseURL: Config.API.apiRoot,
-});
 
-AuthInterceptor(httpClient);
-HttpInterctor(httpClient);
-ErrorInterctor(httpClient);
+export function createHttpClient(config: { url: string; timeout: number; }, ns = EnumErrorNamespace.DMART) {
+  const httpClient = axios.create({
+    baseURL: config.url,
+    timeout: config.timeout,
+  });
 
-export default httpClient;
+
+  AuthInterceptor(httpClient);
+  HttpInterctor(httpClient);
+  ErrorInterctor(httpClient, ns);
+  return httpClient;
+}
+
+export class HttpService {
+  private static instance: AxiosInstance | null = null;
+
+  static get httpClient(): AxiosInstance {
+    if (this.instance) {
+      return this.instance;
+    }
+    const _instance = createHttpClient(
+      {
+        url: ConfigService.Config.API.apiRoot,
+        timeout: ConfigService.Config.API.queryTimeout,
+      },
+      EnumErrorNamespace.DMART
+    );
+    this.instance = _instance;
+    return _instance;
+  }
+}

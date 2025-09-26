@@ -3,12 +3,12 @@ import { Config } from '../config';
 import { AuthState } from './auth.state';
 
 
-export const AuthInterceptor = (httpClient: AxiosInstance) => {
+export function AuthInterceptor(httpClient: AxiosInstance) {
 
   httpClient.interceptors.request.use(
     (config) => {
       // if url is login, do not include authorization no matter what
-      if (!config.url?.includes(Config.API.auth.login)) {
+      if (!config.url?.includes(Config.API.auth.login) && AuthState.GetToken()) {
         config.headers['Authorization'] = `Bearer ${AuthState.GetToken()}`;
       } else {
         config.headers['Authorization'] = '';

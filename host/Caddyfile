@@ -1,21 +1,35 @@
 http://localhost:2015 {
-	# Enable templates
-	root * build
-	encode
-	file_server
-	templates
 
-	@lang path_regexp ^/(en|ar)(/.*)?$
+  handle_path /web/config.json {
+    root * .
+    rewrite * /config/config.json
+    file_server
+  }
+  handle_path /web* {
 
-	handle @lang {
-		vars lang_code {re.lang.1}
-		map {re.lang.1} {text_dir} {
-			ar rtl
-			ku rtl
-			default ltr
-		}
-		vars content_dir {text_dir}
+    root * build
+    encode
+    file_server
+    templates
 
-		try_files {path} /index.html
-	}
+
+    @lang path_regexp myreg (en|ar|ku).*
+
+    handle @lang {
+      vars lang_code {re.myreg.1}
+      map {re.myreg.1} {text_dir} {
+        ar rtl
+        ku rtl
+        default ltr
+      }
+      vars content_dir {text_dir}
+
+      try_files {path} /index.html
+    }
+
+    # default handler
+    handle {
+      try_files {path} /index.html
+    }
+  }
 }

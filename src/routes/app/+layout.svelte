@@ -1,6 +1,8 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import { page } from '$app/state';
   import { AuthState } from "$src/auth/auth.state";
+  import { routeGuard } from '$src/auth/guard.js';
   import { Config } from "$src/config";
   import { rootRecordList } from "$src/services/record.state.js";
   import Language from "$src/shared/Language.svelte";
@@ -14,11 +16,17 @@
 
   const logout = async (e) => {
     e.preventDefault();
+
     await AuthService.Logout();
+
     AuthState.Logout();
 
     goto(routeLink(Config.Auth.loginRoute));
   };
+
+  $effect(() => {
+    routeGuard(page.data?.permission);
+  });
 </script>
 
 <header>

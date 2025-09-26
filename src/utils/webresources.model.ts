@@ -1,4 +1,5 @@
 import { Config } from '$src/config';
+import { ConfigService } from '$src/data/config.service';
 import { Res } from '$utils/resources';
 
 export interface IWebResource {
@@ -7,10 +8,12 @@ export interface IWebResource {
 
 
 
-export const languageInput = Config.Res.languages.reduce((acc: any, cur) => {
+
+export const languageInput = ConfigService.Config.Res.languages.reduce((acc: any, cur) => {
   acc[cur.name] = null;
   return acc;
 }, {});
+
 
 export class WebResource {
   static MapLanguage(prop: IWebResource): string {

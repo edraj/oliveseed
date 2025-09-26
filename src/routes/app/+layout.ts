@@ -9,9 +9,16 @@ export const load = async () => {
   if (!AuthState.currentState) {
     goto(routeLink(Config.Auth.loginRoute));
   }
+  if (AuthState.ForceChange) {
+    goto(routeLink(Config.Auth.resetRoute));
+    return;
+  }
+
+
   const records = await RecordService.GetRecords();
 
   return {
+    user: AuthState.currentState.payload,
     records,
   };
 };

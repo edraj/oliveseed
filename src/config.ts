@@ -1,6 +1,9 @@
 // export config
 
+import { base } from '$app/paths';
+
 export const Config = {
+  isServed: false,
   Basic: {
     defaultRoute: '/',
     appRoot: '/app',
@@ -10,6 +13,7 @@ export const Config = {
     defaultUploadFormat: ['gif', 'jpg', 'jpeg', 'png'],
     defaultToastTimeout: 5000,
     lockTimeout: 100,
+    dblClickTimeout: 2000,
   },
   Res: {
     languages: [
@@ -25,7 +29,8 @@ export const Config = {
     userAccessKey: 'user',
     redirectKey: 'redirectUrl',
     loginRoute: '/login',
-    errorCode: 49,
+    resetRoute: '/auth/password',
+    resetCode: 'CHANGE_PASSWORD',
   },
   Cache: {
     Timeout: 24,
@@ -33,26 +38,33 @@ export const Config = {
     ResetKey: '20250101',
   },
   API: {
-    apiRoot: import.meta.env.VITE_DMART_URL, // FIXME: move to environment
+    apiRoot: import.meta.env.VITE_DMART_URL, // written by config service
+    queryTimeout: 10000,
     defaultSpace: 'maqola',
-    rootSpace: 'management',
-    contentSpace: 'Public',
-    personalSpace: 'personal',
     autoShortname: 'auto',
+    local: {
+      // static json files
+      errors: `${base}/locale/errors.:lang.json`,
+      config: `${base}/config.json`
+    },
+    data: {
+      // add subpaths to content that needs to be preloaded and chached
+    },
+    // optional, not necessary
     records: {
       list: '/records',
     },
-
     auth: {
       login: '/user/login',
       logout: '/user/logout',
       profile: '/user/profile',
-    },
-    users: {
-      list: '/users',
+      reset: '/user/password-reset-request',
+      protected: '/user/:shortname/protected',
+      path: '/users'
     },
     public: {
       query: '/public/query',
+      space: 'public' // i may not exist in the implement dmart
     },
     resource: {
       query: '/managed/query',

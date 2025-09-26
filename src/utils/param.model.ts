@@ -148,6 +148,14 @@ export interface IEntryQuery {
   validate_schema?: boolean;
 }
 
+
+export interface IParamKeyword {
+  role?: string;
+  roles?: string[];
+  isActive?: boolean;
+  keyword?: string; // used for shortname
+}
+
 export class Param {
   static MapQueryParams(options: IParam): IQueryRequest {
     // map each to its name in db, watch out for arrays
@@ -216,5 +224,29 @@ export class Param {
       workflow_name: options.workflow,
       records: options.records || null,
     };
+  }
+
+
+  static MapKeyword(options: IParamKeyword): string {
+    let keyword = '';
+    if (options?.role) {
+      keyword += `@roles:${options.role} `;
+    }
+    if (options?.roles) {
+      keyword += `@roles:${options.roles.join('|')} `;
+    }
+    // example of payload with date
+    // if (options?.startDate) {
+    //   // till end of time 7258021200
+    //   keyword += `@payload.body.expiry_date:[${Math.floor(options.startDate.valueOf() / 1000)},7258021200] `;
+    // }
+    if (options?.isActive) {
+      keyword += `@is_active:${options.isActive} `;
+    }
+    if (options?.keyword) {
+      keyword += `@shortname:*${options.keyword}* `;
+    }
+
+    return keyword;
   }
 }

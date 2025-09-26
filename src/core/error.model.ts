@@ -1,47 +1,87 @@
+import type { ResponseType } from 'axios';
 
-
+export interface IClientErrorParam {
+  toast?: boolean;
+  includeError?: boolean;
+  replaceCode?: { from: any, to: any; }[];
+}
 export interface IClientError {
-  code: string,
-  status: string,
-  message: string,
+  code: string;
+  status: string;
+  message: string;
   request?: {
-    url: string,
+    url: string;
     method: string;
-  },
+    responseType?: ResponseType;
+  };
   response: any;
-  params?: any;
+  params?: IClientErrorParam;
+}
+
+// add other API spaces if used
+export enum EnumErrorNamespace {
+  DMART = 'dmart',
 }
 
 export interface IUiError {
-  code: number; // dmart error code
+  code: string; // dmart error code
   message?: any; // technical as much as possible
   status?: any; // axios status mostly number
-  uiCode?: string; // axios codefor client
+  httpCode?: string; // axios codefor client
+  apiCode?: number; // API thrown code
   toast?: boolean;
+  origin?: any; // used when full cards errors are needed
 }
 
 export const UiError = (error: IClientError): IUiError => {
   let e: IUiError = {
-    code: 0,
+    code: 'Unknown',
     message: error.message, // fall back all error
-    uiCode: 'Unknown',
+    httpCode: 'Unknown',
     status: 0,
-    toast: true
+    toast: true,
+    apiCode: 0,
   };
 
   if (error) {
     e.status = error.status || 400;
-    e.uiCode = error.code; // axios code
+    e.httpCode = error.code; // axios code
+
+    // must be false explicitly, else true
     e.toast = error.params?.toast !== false;
-    // look for code inside info
-    e.code = error.response?.code || error.code || 0;
+
+    e.apiCode = error.response?.code || error.code || 0;
+
+    if (error.request.responseType === 'blob') {
+      if (e.status === 403) {
+        e.code = EnumErrorCode.BLOB_UNAUTHORIZED;
+      } else {
+        e.code = EnumErrorCode.ERROR_IN_BLOB;
+      }
+    }
+    if (error.response?.info?.length) {
+      e.apiCode = error.response.info[0].failed?.[0].error_code || e.apiCode;
+    }
     let _m = error.response?.type || ''; // validaion
+
     e.message = _m;
+
+    if (error.params?.includeError) {
+      e.origin = error.response;
+    }
+
+    if (error.params?.replaceCode?.length) {
+      error.params.replaceCode.forEach((r) => {
+        if (e.apiCode === r.from) {
+          e.apiCode = r.to;
+        }
+      });
+    }
   }
   return e;
 };
 
-export enum EnumErrorCode {
+export enum EnumDmartErrorCode {
   NOT_ALLOWED = 401,
   VALIDATION_ERROR = 422,
   UNPROCESSABLE_ENTITY = 424,
@@ -95,7 +135,15 @@ export enum EnumErrorCode {
   INVALID_TOKEN = 47,
   EXPIRED_TOKEN = 48,
   NOT_AUTHENTICATED = 49,
-  SESSION = 50,
+  OTP_REQUIRED = 50,
   OBJECT_NOT_SAVED = 51,
 
+  ACCOUNT_LOCKED = 110,
+}
+
+export enum EnumErrorCode {
+  ERROR_IN_BLOB = 'ERROR_IN_BLOB',
+  BLOB_UNAUTHORIZED = 'BLOB_UNAUTHORIZED',
+  ERR_NETWORK = 'ERR_NETWORK',
+  ECONNABORTED = 'ECONNABORTED'
 }

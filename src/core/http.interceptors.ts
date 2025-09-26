@@ -52,6 +52,7 @@ export const HttpInterctor = (httpClient: AxiosInstance) => {
         request: {
           url: error.response?.config?.url,
           method: error.response?.config?.method,
+          responseType: error.response?.config?.responseType,
         },
         response: error.response?.data?.error,
         params: error.response?.config?.params || error.config?.params

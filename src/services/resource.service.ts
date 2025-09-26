@@ -1,5 +1,5 @@
+import { HttpService } from '$src/core/http.service';
 import { Config } from '../config';
-import httpClient from '../core/http.service';
 import { mapRecords, mapResponse } from '../core/response.model';
 import { EnumRequestType, Param, type IParam } from '../utils/param.model';
 import { Resource, type IResource } from './resource.model';
@@ -10,7 +10,7 @@ export class ResourceService {
   static async GetResources(options: IParam = {}): Promise<any[]> {
 
     const params = Param.MapQueryParams(options);
-    const res = await httpClient.post(Config.API.resource.query, {
+    const res = await HttpService.httpClient.post(Config.API.resource.query, {
       ...params
     });
     return mapRecords(res);
@@ -19,7 +19,7 @@ export class ResourceService {
   static async GetResource(options: IParam = {}): Promise<IResource> {
 
     const params = Param.MapQueryParams({ ...options, size: 1 });
-    const res = await httpClient.post(Config.API.resource.query, {
+    const res = await HttpService.httpClient.post(Config.API.resource.query, {
       ...params
     });
 
@@ -40,7 +40,7 @@ export class ResourceService {
   static async CreateResource(resource: Partial<IResource>): Promise<IResource> {
 
     const req = this.getRequest(EnumRequestType.create, resource);
-    const res = await httpClient.post(req.url, req.req);
+    const res = await HttpService.httpClient.post(req.url, req.req);
     return Resource.NewInstance(mapResponse(res), resource.space);
   }
 
@@ -49,7 +49,7 @@ export class ResourceService {
 
     // replace
     const req = this.getRequest(EnumRequestType.update, resource);
-    await httpClient.post(req.url, req.req);
+    await HttpService.httpClient.post(req.url, req.req);
     return null;
   }
 
@@ -59,7 +59,7 @@ export class ResourceService {
       type: EnumRequestType.delete,
       records: [Resource.PrepDelete(resource)],
     });
-    await httpClient.post(Config.API.resource.request, req);
+    await HttpService.httpClient.post(Config.API.resource.request, req);
     return true;
   }
 }

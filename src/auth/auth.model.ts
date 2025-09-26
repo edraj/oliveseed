@@ -4,6 +4,8 @@ export interface IAuthUser {
   accessToken?: string;
   expiresAt?: number;
   payload?: IProfile;
+  type?: 'web' | 'mobile';
+
 }
 
 export class AuthUser {
@@ -15,6 +17,7 @@ export class AuthUser {
     return {
       accessToken: res.access_token,
       expiresAt: _res.expires * 1000,
+      type: res.type,
       payload: Profile.NewInstance(res), // this has shortname
     };
   }

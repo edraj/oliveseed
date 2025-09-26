@@ -1,5 +1,6 @@
 // create an abstract service for state
 
+import { debug } from '$src/core/rxjs.operators';
 import clone from "just-clone";
 import { BehaviorSubject, type Observable } from "rxjs";
 export interface IStateItem {
@@ -9,6 +10,17 @@ export interface IStateItem {
 export class ListStateService<T extends IStateItem> {
   protected stateList: BehaviorSubject<T[]> = new BehaviorSubject([]);
   stateList$: Observable<T[]> = this.stateList.asObservable();
+
+
+  constructor(level?: string) {
+
+    if (level === 'DEBUG') {
+      // default dont debug
+      this.stateList$ = this.stateList$.pipe(
+        debug(this.constructor.name)
+      );
+    }
+  }
 
   get currentList(): T[] {
     return this.stateList.getValue();
@@ -51,6 +63,14 @@ export class ListStateService<T extends IStateItem> {
 export class StateService<T> {
   protected stateItem: BehaviorSubject<T | null> = new BehaviorSubject(null);
   stateItem$: Observable<T | null> = this.stateItem.asObservable();
+
+  constructor(level?: string) {
+    if (level === 'DEBUG') {
+      this.stateItem$ = this.stateItem$.pipe(
+        debug(this.constructor.name)
+      );
+    }
+  }
 
   get currentItem(): T | null {
     return this.stateItem.getValue();
