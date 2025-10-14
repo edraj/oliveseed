@@ -35,7 +35,7 @@
       } else {
         const input = element.querySelector('input, select, textarea');
         if (input) prepInput(input);
-  
+
       }
     }, delay || 0);
 
@@ -70,7 +70,7 @@
 
     // if required, listen to clicks of checkboxes to update state
     if (container.dataset.required === 'true') {
-      
+
       const inputs = container.querySelectorAll('input');
       updateElement(container);
 
@@ -99,7 +99,9 @@
 </script>
 
 <div class="ol-field {cssType} {invalidForm ? 'ol-invalid-form' : ''}" {id}>
+  {#if placeholder}
   <label class="ol-label" for={forLabel}>{placeholder}</label>
+  {/if}
   {@render input()}
   <span class="ol-required"></span>
   <span class="ol-feedback {invalidForm ? 'ol-form-feedback' : ''}">{errorText}</span>
@@ -107,6 +109,3 @@
     {@render help?.()}
   </span>
 </div>
-
-<style>
-</style>
