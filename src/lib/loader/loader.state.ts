@@ -1,6 +1,5 @@
-import { StateService } from '$src/core/state.svelte';
+import { StateService } from '$src/core/state.abstract';
 import type { ILoaderState } from '$src/lib/loader/loader.model';
-import { share } from 'rxjs';
 
 export class LoaderState extends StateService<ILoaderState> {
 
@@ -9,7 +8,6 @@ export class LoaderState extends StateService<ILoaderState> {
     this.SetState({
       show: false, source: null, url: null
     });
-    this.stateItem$ = this.stateItem$.pipe(share());
   }
   show(source: string) {
     this.update({ show: true, source });

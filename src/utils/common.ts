@@ -30,6 +30,15 @@ export const cleanPath = (path: string) => {
 };
 
 
+export const cleanPhone = (number: string) => {
+  return number
+    .replace(/\s+/g, '')
+    .replace(/^\+/, '')
+    .replace(/^07/, '9647')
+    .replace(/^7/, '9647');
+};
+
+
 export const generateShortName = (displayname: string) => {
   // replace all non-alphanumeric characters with underscore
 

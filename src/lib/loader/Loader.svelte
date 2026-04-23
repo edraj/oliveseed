@@ -1,9 +1,9 @@
 <script lang="ts">
   import { afterNavigate, beforeNavigate } from '$app/navigation';
   import { Loader } from '$src/lib/loader/loader.state';
-  import { map } from 'rxjs';
+  import { derived } from 'svelte/store';
 
-  let show = Loader.stateItem$.pipe(map((state) => (state ? state.show : false)));
+  let show = derived(Loader.stateItem$, (state) => (state ? state.show : false));
 
   afterNavigate((navigation) => {
     Loader.emitUrl(navigation.to.url.pathname);
@@ -22,8 +22,10 @@
 {/if}
 
 <style>
+
   .httploader {
-    height: 4px;
+    --sh-loader-height: 5px;
+    height: var(--sh-loader-height);
     position: fixed;
     top: 0;
     left: 0;
@@ -35,15 +37,15 @@
   .line {
     position: absolute;
     opacity: 0.4;
-    background: #6f5127;
+    background: #927fe9;
     width: 100%;
-    height: 5px;
+    height: var(--sh-loader-height);
   }
 
   .subline {
     position: absolute;
-    background: #720000;
-    height: 5px;
+    background: #4f08c9;
+    height: var(--sh-loader-height);
   }
   .inc {
     animation: increase 5s infinite;

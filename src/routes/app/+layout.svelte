@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
+  import { goto } from '$app/navigation';
   import { page } from '$app/state';
-  import { AuthState } from "$src/auth/auth.state";
+  import { AuthState } from '$src/auth/auth.state';
   import { routeGuard } from '$src/auth/guard.js';
-  import { Config } from "$src/config";
-  import { rootRecordList } from "$src/services/record.state.js";
-  import Language from "$src/shared/Language.svelte";
-  import { translate } from "$utils/resources";
-  import { routeLink } from "$utils/route";
+  import { Config } from '$src/config';
+  import { rootRecordList } from '$src/services/record.state.js';
+  import Language from '$src/shared/Language.svelte';
+  import { translate } from '$utils/resources';
+  import { routeLink } from '$utils/route';
   import { AuthService } from '../../auth/auth.service.js';
   let { children, data } = $props();
   const user = AuthState.GetUser();

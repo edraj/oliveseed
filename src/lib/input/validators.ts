@@ -65,17 +65,13 @@ export const dateRangeValidatorFn = (params: { minDate?: string, maxDate?: strin
   };
 };
 
-// validate file size to be what?
+// validate file size exceeds max (in KB)
 export const sizeValidatorFn = (params: { size: number, max: number; }): any => {
   return (value: string): boolean => {
     if (!value) return true;
     // convert max from KB to bytes
     const _max = params.max * 1024;
-    if (params.size > _max) {
-      return true;
-    }
-
-    return false;
+    return params.size <= _max;
   };
 };
 

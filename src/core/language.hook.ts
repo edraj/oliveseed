@@ -12,6 +12,9 @@ export const LanguageHook: Handle = async ({ event, resolve }) => {
       event.cookies.get(Config.Res.cookieName) || Config.Res.defaultLanguage;
   }
 
+
+  Res.setLanguage(lang);
+
   const result = await resolve(event, {
     transformPageChunk: ({ html }) => {
       // here, manipulate html based on language

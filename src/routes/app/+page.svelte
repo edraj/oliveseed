@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { Toast } from "$lib/toast/toast.state";
-  import { AuthState } from "$src/auth/auth.state";
+  import { Toast } from '$lib/toast/toast.state';
+  import { AuthState } from '$src/auth/auth.state';
   const user = AuthState.GetUser();
 
   const tryme = () => {
-    Toast.Show("INVALID_FORMAT");
+    Toast.Show('INVALID_FORMAT');
   };
 </script>
 

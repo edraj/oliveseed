@@ -6,7 +6,6 @@ Sveltekit seed project
 
 `npm run install:all`
 
-Uses `bits-ui` library without styling
 
 Create `.env` and define `VITE_DMART_URL`
 

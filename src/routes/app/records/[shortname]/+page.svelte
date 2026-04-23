@@ -1,14 +1,4 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  import { rootRecordList } from "$src/services/record.state";
-  import { map } from "rxjs";
 
-  // this might be a direct api call
-  const record = rootRecordList.stateList$.pipe(
-    map((f) => f.find((n) => n.shortname === page.params.shortname)),
-  );
+ // get single record by param in page.ts, the read and populate here
 </script>
-
-{#if $record}
-  <h4>{$record.displayname}</h4>
-{/if}

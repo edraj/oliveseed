@@ -1,8 +1,7 @@
-import { Config } from "$src/config";
+import { Config } from '$src/config';
 import { Resource, type IResource } from '$src/services/resource.model';
-import { makeDate, toISODateString } from "$utils/common";
+import { makeDate, toISODateString } from '$utils/common';
 import { EnumContentType, EnumResourceType } from '../utils/param.model';
-
 
 export interface IDmartRecord extends IResource {
   date?: Date; // example props, add all that u need
@@ -11,7 +10,6 @@ export interface IDmartRecord extends IResource {
 
 export class DmartRecord {
   static NewInstance(data: any): IDmartRecord {
-
     const res = Resource.NewInstance(data);
     return {
       ...res,

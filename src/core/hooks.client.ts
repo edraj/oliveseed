@@ -1,20 +1,19 @@
-import type { ClientInit, HandleClientError } from "@sveltejs/kit";
+import type { ClientInit, HandleClientError } from '@sveltejs/kit';
 
-import { browser, dev } from "$app/environment";
-import { Config } from "$src/config";
+import { browser, dev } from '$app/environment';
+import { Config } from '$src/config';
 import { ConfigService } from '$src/data/config.service';
 import { DataService } from '$src/data/data.service';
-import { getCookie, setCookie } from "$utils/common";
-import { Res } from "$utils/resources";
+import { getCookie, setCookie } from '$utils/common';
+import { Res } from '$utils/resources';
 
 export const init: ClientInit = async () => {
   // check language and inject it
 
   if (browser && dev) {
-    window["_indebug"] = true;
-    _seqlog("client init");
+    window['_indebug'] = true;
+    _seqlog('client init');
   }
-
 
   await ConfigService.LoadConfig();
 
@@ -32,14 +31,13 @@ export const init: ClientInit = async () => {
   setCookie(Config.Res.cookieName, lang, Config.Res.Timeout);
 
   await DataService.ApplyWebResources();
-
 };
 
 export const handleError: HandleClientError = async (error) => {
   // WATCH: i dont believe this is working
-  _debug(error, "Unhandled Error", "e");
+  _debug(error, 'Unhandled Error', 'e');
   // _debug(error, "stack", "t");
   return {
-    message: "Error",
+    message: 'Error',
   };
 };

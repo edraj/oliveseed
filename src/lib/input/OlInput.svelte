@@ -15,10 +15,11 @@
   }
   const { placeholder, error, invalidForm, type, input, help, delay }: IProps = $props();
 
-  const cssType = type ? `ol-${type}` : '';
+  const cssType = $derived(type ? `ol-${type}` : '');
 
   // FIXME: maintain default
-  let errorText = $state(error);
+  // svelte-ignore state_referenced_locally
+    let errorText = $state(error);
 
   const id = $props.id();
 
@@ -42,7 +43,9 @@
   });
 
   const prepInput = (input) => {
-    input.placeholder = placeholder;
+    if (placeholder){
+      input.placeholder = placeholder;
+    }
     input.classList.add('ol-input');
 
     forLabel = input.id;
@@ -109,3 +112,7 @@
     {@render help?.()}
   </span>
 </div>
+
+<style lang="less">
+  @import url('./input.less');
+</style>

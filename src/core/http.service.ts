@@ -1,9 +1,10 @@
 import { AuthInterceptor } from '$src/auth/auth.interceptor';
+import { Config } from '$src/config';
 import { ErrorInterctor } from '$src/core/error.interceptor';
 import { EnumErrorNamespace } from '$src/core/error.model';
 import { ConfigService } from '$src/data/config.service';
 import axios, { type AxiosInstance } from 'axios';
-import { HttpInterctor } from './http.interceptors';
+import { HttpInterceptor } from './http.interceptors';
 
 
 export function createHttpClient(config: { url: string; timeout: number; }, ns = EnumErrorNamespace.DMART) {
@@ -14,7 +15,7 @@ export function createHttpClient(config: { url: string; timeout: number; }, ns =
 
 
   AuthInterceptor(httpClient);
-  HttpInterctor(httpClient);
+  HttpInterceptor(httpClient);
   ErrorInterctor(httpClient, ns);
   return httpClient;
 }
@@ -28,7 +29,7 @@ export class HttpService {
     }
     const _instance = createHttpClient(
       {
-        url: ConfigService.Config.API.apiRoot,
+        url: Config.API.root + ConfigService.Config.API.apiRoot,
         timeout: ConfigService.Config.API.queryTimeout,
       },
       EnumErrorNamespace.DMART

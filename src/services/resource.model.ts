@@ -87,6 +87,30 @@ export class Resource {
   }
 
 
+  static GetFromPath(subpath: string): string {
+    // this is like /sellers/name/info, the returned shortname is "info", is redundant, short name is "name", extract
+    return subpath.split('/').pop();
+  }
+
+
+  static PrepPayload(resource: Partial<IResource>, payload?: any): any {
+
+    return {
+      resource_type: resource.type || EnumResourceType.content,
+      shortname: resource.shortname,
+      subpath: resource.subpath || '/',
+      attributes: {
+        is_active: resource.isActive ?? true,
+        displayname: resource.displaynameInput,
+        description: resource.descriptionInput,
+        tags: resource.tags || [],
+        ...payload
+
+      }
+    };
+  }
+
+
   static PrepPost(resource: Partial<IResource>): any {
 
     let payload = null;

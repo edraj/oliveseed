@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { IDialogData } from "$lib/dialog/service.svelte";
-  import type { IDmartRecord } from "$src/services/record.model";
-  import RecordForm from "./form.svelte";
+  import type { IDialogData } from '$src/lib/dialog/service';
+  import type { IDmartRecord } from '$src/services/record.model';
+  import RecordForm from './form.svelte';
 
   const props: IDialogData<IDmartRecord> = $props();
 </script>

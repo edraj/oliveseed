@@ -1,12 +1,15 @@
-import { Config } from "$src/config";
+import { Config } from '$src/config';
 import { HttpService } from '$src/core/http.service';
-import { EnumQueryType, EnumRequestType, Param, type IParam } from '../utils/param.model';
-import { DmartRecord, type IDmartRecord } from "./record.model";
+import {
+  EnumQueryType,
+  EnumRequestType,
+  Param,
+  type IParam,
+} from '../utils/param.model';
+import { DmartRecord, type IDmartRecord } from './record.model';
 import { ResourceService } from './resource.service';
 
 export class RecordService {
-
-
   static async GetRecords(): Promise<IDmartRecord[]> {
     // create a search query
     const params: IParam = {
@@ -21,8 +24,9 @@ export class RecordService {
     return DmartRecord.NewInstances(res);
   }
 
-  static async CreateRecord(record: Partial<IDmartRecord>): Promise<IDmartRecord> {
-
+  static async CreateRecord(
+    record: Partial<IDmartRecord>,
+  ): Promise<IDmartRecord> {
     const res = await ResourceService.CreateResource(record);
     return res;
   }

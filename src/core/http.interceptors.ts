@@ -2,10 +2,9 @@ import { Loader } from '$src/lib/loader/loader.state';
 import type { AxiosInstance } from 'axios';
 import { UiError, type IClientError } from './error.model';
 
-export const HttpInterctor = (httpClient: AxiosInstance) => {
+export const HttpInterceptor = (httpClient: AxiosInstance) => {
   httpClient.interceptors.request.use(
     function (config) {
-
       let _m = `Request ${config.method} ${config.url}`;
 
       if (config.data?.subpath) {
@@ -14,22 +13,21 @@ export const HttpInterctor = (httpClient: AxiosInstance) => {
       if (config.data?.search) {
         _m += config.data.search;
       }
-
-      Loader.show('API');
+      Loader.show(config.context || 'API');
       _debug(config.data, _m, 'p');
       return config;
     },
     function (error) {
-      Loader.hide('API');
+      Loader.hide(error.request?.config?.context || 'API');
       _debug(error, `Request Error ${error.request}`, 'e');
-      // WATCH: not sure about it
+
       const e = UiError(error);
       return Promise.reject(e);
     }
   );
   httpClient.interceptors.response.use(
     function (response) {
-      Loader.hide('API');
+      Loader.hide(response.config?.context || 'API');
       let _m = `${response.config.method.toUpperCase()} ${response.config.url}`;
 
       if (response.config.data && typeof response.config.data === 'string') {
@@ -45,6 +43,8 @@ export const HttpInterctor = (httpClient: AxiosInstance) => {
       return response.data;
     },
     function (error: any) {
+      Loader.hide(error.response?.config?.context || 'API');
+
       const err: IClientError = {
         code: error.code,
         status: error.status,
@@ -55,14 +55,14 @@ export const HttpInterctor = (httpClient: AxiosInstance) => {
           responseType: error.response?.config?.responseType,
         },
         response: error.response?.data?.error,
-        params: error.response?.config?.params || error.config?.params
+        params: error.response?.config?.params || error.config?.params,
+        errorContext: error.response?.config?.errorContext
       };
 
       const e = UiError(err);
 
-      Loader.hide('API');
       _debug(
-        { uiError: e, dmartError: err.response },
+        { uiError: e, originalResponse: err.response },
         `Response error ${err.code}: ${err.request?.method} ${err.request?.url}`,
         'e'
       );

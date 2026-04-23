@@ -1,9 +1,16 @@
 import type { ResponseType } from 'axios';
 
+export enum EnumErrorAction {
+  VIEW_SELLERS,
+  VIEW_BRANDS,
+  SEARCH_PRODUCT,
+  MY_ORDERS,
+}
+
 export interface IClientErrorParam {
   toast?: boolean;
   includeError?: boolean;
-  replaceCode?: { from: any, to: any; }[];
+  swap?: { from: any, to: any; }[];
 }
 export interface IClientError {
   code: string;
@@ -15,7 +22,9 @@ export interface IClientError {
     responseType?: ResponseType;
   };
   response: any;
-  params?: IClientErrorParam;
+  params?: any;
+  errorContext?: IClientErrorParam;
+
 }
 
 // add other API spaces if used
@@ -33,6 +42,10 @@ export interface IUiError {
   origin?: any; // used when full cards errors are needed
 }
 
+export interface IServiceError extends IUiError {
+  artifact?: any;
+}
+
 export const UiError = (error: IClientError): IUiError => {
   let e: IUiError = {
     code: 'Unknown',
@@ -48,7 +61,7 @@ export const UiError = (error: IClientError): IUiError => {
     e.httpCode = error.code; // axios code
 
     // must be false explicitly, else true
-    e.toast = error.params?.toast !== false;
+    e.toast = error.errorContext?.toast !== false;
 
     e.apiCode = error.response?.code || error.code || 0;
 
@@ -62,16 +75,16 @@ export const UiError = (error: IClientError): IUiError => {
     if (error.response?.info?.length) {
       e.apiCode = error.response.info[0].failed?.[0].error_code || e.apiCode;
     }
-    let _m = error.response?.type || ''; // validaion
+    let _m = error.response?.message || ''; // validaion
 
     e.message = _m;
 
-    if (error.params?.includeError) {
+    if (error.errorContext?.includeError) {
       e.origin = error.response;
     }
 
-    if (error.params?.replaceCode?.length) {
-      error.params.replaceCode.forEach((r) => {
+    if (error.errorContext?.swap?.length) {
+      error.errorContext.swap.forEach((r) => {
         if (e.apiCode === r.from) {
           e.apiCode = r.to;
         }
@@ -80,7 +93,6 @@ export const UiError = (error: IClientError): IUiError => {
   }
   return e;
 };
-
 export enum EnumDmartErrorCode {
   NOT_ALLOWED = 401,
   VALIDATION_ERROR = 422,

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { displayDate } from "$lib/transform/date";
-  import { AuthState } from "$src/auth/auth.state";
-  import { EnumRole } from "$src/auth/profile.model";
-  import type { IDmartRecord } from "$src/services/record.model";
-  import { routeLink } from "$utils/route";
+  import { displayDate } from '$lib/transform/date';
+  import { AuthState } from '$src/auth/auth.state';
+  import { EnumRole } from '$src/auth/profile.model';
+  import type { IDmartRecord } from '$src/services/record.model';
+  import { routeLink } from '$utils/route';
 
   const user = AuthState.GetUser();
 

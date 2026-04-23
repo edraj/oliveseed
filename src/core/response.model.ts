@@ -12,6 +12,16 @@ export const mapRecord = (record: any) => {
     ...body,
   };
 };
+// after a join, the returned is an array of records without key
+export const mapRecordArray = (records: any[]) => {
+  if (!records?.length) return [];
+  return records.map(n => mapRecord(n));
+};
+
+export const mapJoin = (records: any[]): any => {
+  if (!records?.length) return null;
+  return mapRecord(records[0]);
+}
 // general as much as possible
 export const mapResponse = (data: any): any => {
   // either return single record or multiple records
@@ -40,4 +50,19 @@ export const mapRecords = (data: any): any[] => {
 export const mapAttachments = (data: any): any[] => {
   if (!data?.length) return null;
   return data.map(mapRecord);
+};
+
+export const mapEntry = (data: any): any => {
+  // this one has entry at attribtues level
+  if (!data) return null;
+  let body = data?.payload?.body;
+  // if its text, dont expand
+  if (typeof body === "string") body = { body };
+
+  return {
+    ...data,
+    ...data?.payload,
+    ...data.attachments,
+    ...body,
+  };
 };

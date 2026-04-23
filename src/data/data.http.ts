@@ -1,20 +1,29 @@
 
+import { version } from '$app/environment';
 import { Config } from '$src/config';
-import { HttpInterctor } from '$src/core/http.interceptors';
+import { HttpInterceptor } from '$src/core/http.interceptors';
 import { Res } from '$src/utils/resources';
-import axios from 'axios';
+import axios, { type AxiosInstance } from 'axios';
 
 
-const buildTime = import.meta.env.VITE_BUILD_TIME || Date.now();
 
 export const DataUrl = (url: string) => {
-  return Config.API.local[url].replace(':lang', Res.language) + '?v=' + buildTime;
+  return Config.API.local[url].replace(':lang', Res.language) + '?v=' + version;
 };
 
-const dataClient = axios.create({
-  baseURL: '/', // thisi s local
-});
+export class DataHttpService {
+  private static instance: AxiosInstance | null = null;
 
-HttpInterctor(dataClient);
-export default dataClient;
+  static get httpClient(): AxiosInstance {
+    if (this.instance) {
+      return this.instance;
+    }
+    const _instance = axios.create({
+      baseURL: Config.API.localRoot
+    });
+    HttpInterceptor(_instance);
 
+    this.instance = _instance;
+    return _instance;
+  }
+}

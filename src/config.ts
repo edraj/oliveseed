@@ -38,14 +38,18 @@ export const Config = {
     ResetKey: '20250101',
   },
   API: {
-    apiRoot: import.meta.env.VITE_DMART_URL, // written by config service
+    apiRoot: import.meta.env.VITE_DMART_URL,
+    localRoot: '/', // written by config service
     queryTimeout: 10000,
     defaultSpace: 'maqola',
     autoShortname: 'auto',
+    root: '',
     local: {
       // static json files
       errors: `${base}/locale/errors.:lang.json`,
-      config: `${base}/config.json`
+      config: `${base}/config.json`,
+      keys: `${base}/locale/keys.:lang.json`,
+
     },
     data: {
       // add subpaths to content that needs to be preloaded and chached
@@ -60,7 +64,11 @@ export const Config = {
       profile: '/user/profile',
       reset: '/user/password-reset-request',
       protected: '/user/:shortname/protected',
-      path: '/users'
+      path: '/users',
+      otp: '/user/otp-request',
+      register: '/user/create',
+
+
     },
     public: {
       query: '/public/query',

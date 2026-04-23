@@ -1,11 +1,20 @@
 import { page } from '$app/state';
+import { plainPath } from '$src/utils/route';
 import type { Attachment } from 'svelte/attachments';
 
-export function activenav(classname: string, exact: boolean = true): Attachment {
-  return (element: HTMLElement) => {
-    const path = page.url.pathname;
-    const href = element.getAttribute('href');
-    let hasIt = exact ? path === href : path.startsWith(href);
+
+const isActive = (href: string, exact: boolean) => {
+  // remove language and web
+  const path = plainPath(page.url.pathname);
+
+  let hasIt = exact ? path === href : path.startsWith(href);
+  return hasIt;
+};
+
+export function isactive(classname: string): Attachment {
+  return (element: HTMLAnchorElement) => {
+    const hasIt = isActive(plainPath(element.pathname), true);
+
 
     if (hasIt) {
       element.classList.add(classname);

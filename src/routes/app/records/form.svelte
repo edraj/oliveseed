@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { ValidateForm } from "$lib/input/form";
-  import OlInput from "$lib/input/OlInput.svelte";
-  import { Toast } from "$lib/toast/toast.state";
-  import type { IDmartRecord } from "$src/services/record.model";
-  import { toISODateString } from "$utils/common";
-  import type { IViewMode } from "$utils/view.model";
+  import { ValidateForm } from '$lib/input/form';
+  import OlInput from '$lib/input/OlInput.svelte';
+  import { Toast } from '$lib/toast/toast.state';
+  import type { IDmartRecord } from '$src/services/record.model';
+  import { toISODateString } from '$utils/common';
+  import type { IViewMode } from '$utils/view.model';
 
   interface IPageProps {
     mode?: IViewMode;

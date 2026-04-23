@@ -1,5 +1,5 @@
-import { mount, unmount, type Component } from "svelte";
-import DialogComponent from "./Dialog.svelte";
+import { mount, unmount, type Component } from 'svelte';
+import DialogComponent from './Dialog.svelte';
 
 export interface IDialog<T = any> {
   title?: string;
@@ -29,11 +29,11 @@ export class DialogService {
 
     const _close = (data: any) => {
       if (options?.onclose) {
-          options.onclose(data);
-        }
-        // good enough?
-        unmount(dialogElement);
-        delete this.dialogs[id];
+        options.onclose(data);
+      }
+      // good enough?
+      unmount(dialogElement);
+      delete this.dialogs[id];
     };
 
     const dialogElement = mount(DialogComponent, {
@@ -41,33 +41,38 @@ export class DialogService {
       props: {
         ...options,
         id,
-        dialogClose: _close
-      }
+        dialogClose: _close,
+      },
     });
-
 
     this.dialogs[id] = dialogElement;
 
     const _child = document.querySelector(`[data-dialog-id="${id}"]`);
 
-
     const component = mount(c, {
-      target: _child.querySelector("[data-dialog-body]"),
-      props: {data: {...options?.data}, doClose: _close},
+      target: _child.querySelector('[data-dialog-body]'),
+      props: { data: { ...options?.data }, doClose: _close },
       context: options?.context,
     });
-
 
     // component["something"] = dialogElement;
     // need to do sehting with component
     return c;
   }
 
-
-
   public get(id: string) {
     // find the element in body
     return this.dialogs[id] || null;
+  }
+  public hide(id: string) {
+    unmount(this.dialogs[id]);
+    delete this.dialogs[id];
+  }
+  public hideAll() {
+    for (const id in this.dialogs) {
+      unmount(this.dialogs[id]);
+    }
+    this.dialogs = {};
   }
 }
 

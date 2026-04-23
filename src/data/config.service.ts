@@ -1,6 +1,6 @@
 import { Config } from '$src/config';
 import type { IConfig } from '$src/data/config.model';
-import dataClient from '$src/data/data.http';
+import { DataHttpService } from '$src/data/data.http';
 import merge from 'lodash.merge';
 
 export class ConfigService {
@@ -23,7 +23,7 @@ export class ConfigService {
 
   static async LoadConfig(): Promise<boolean> {
     try {
-      const res = await dataClient.get(Config.API.local.config + '?v=' + Date.now());
+      const res = await DataHttpService.httpClient.get(Config.API.local.config + '?v=' + Date.now());
       ConfigService.NewInstance(res, false);
       return true;
     } catch (e) {

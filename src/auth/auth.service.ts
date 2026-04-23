@@ -1,66 +1,67 @@
+import { Profile, type IProfile } from '$src/auth/profile.model';
+import { ProfileService } from '$src/auth/profile.service';
 import { EnumDmartErrorCode } from '$src/core/error.model';
 import { HttpService } from '$src/core/http.service';
-import { mapResponse } from '$src/core/response.model';
 import { Config } from '../config';
 import { AuthUser, type IAuthUser } from './auth.model';
 import { AuthState } from './auth.state';
-import { Profile, type IProfile } from './profile.model';
 
 export class AuthService {
-  static async Login(username: string, password: string, invitation?: string): Promise<IAuthUser> {
-    // call api
-    const _username = username.replace(/\s+/g, '');
-    const res = await HttpService.httpClient.post(Config.API.auth.login, { shortname: _username, password, invitation }, {
-      params: {
-        replaceCode: [
-          { from: EnumDmartErrorCode.UNPROCESSABLE_ENTITY, to: EnumDmartErrorCode.INVALID_USERNAME_AND_PASS }
-        ]
+
+  private static async _SaveProfile(res: any, doSync: boolean): Promise<void> {
+
+    const profile = await ProfileService.GetUser();
+    // save session again
+    AuthState.SavePartial(profile);
+  }
+
+  static RequestCode(username: string): Promise<IAuthUser> {
+    const data = AuthUser.PrepCode(username);
+    return HttpService.httpClient.post(Config.API.auth.otp, data);
+  }
+
+  static async Login(username: string, code?: string): Promise<void> {
+    // call api, with phone number
+    const data = AuthUser.PrepCode(username, code);
+    const res = await HttpService.httpClient.post(Config.API.auth.login, data, {
+      errorContext: {
+        toast: false
       }
     });
 
-    const user = AuthUser.NewInstance(mapResponse(res));
-    AuthState.SaveSession(user);
-    const profile = await AuthService.GetUser();
+    return this._SaveProfile(res, true);
 
-    const _authUser: IAuthUser = {
-      ...user,
-      payload: { ...user.payload, ...profile },
-    };
-
-    // save session again
-    return AuthState.SaveSession(_authUser);
-  }
-  static async LoginByInvite(username: string, invitation: string): Promise<IAuthUser> {
-    return AuthService.Login(username, null, invitation);
   }
 
-  static async GetUser() {
-    const res = await HttpService.httpClient.get(Config.API.auth.profile);
-    return Profile.NewInstance(mapResponse(res));
+  static async Register(username: string, code?: string): Promise<void> {
+  // username is phone number, first send otp, then retrieve and create user
+
+    const data = AuthUser.PrepCreate(username, code);
+    const res = await HttpService.httpClient.post(Config.API.auth.register, data, {
+      errorContext: {
+        swap: [{ from: EnumDmartErrorCode.DATA_SHOULD_BE_UNIQUE, to: EnumDmartErrorCode.OTP_REQUIRED }],
+      }
+    });
+
+    await this._SaveProfile(res, false);
+    return null;
+
+  }
+
+
+  static async DeleteAccount(userProfile: IProfile): Promise<boolean> {
+
+    const data = Profile.PrepDelete(userProfile);
+    await HttpService.httpClient.post(Config.API.auth.profile, data);
+    await AuthService.Logout();
+    AuthState.Logout();
+
+    return true;
   }
 
   static async Logout() {
-    await HttpService.httpClient.post(Config.API.auth.logout, null, { params: { toast: false } });
+    await HttpService.httpClient.post(Config.API.auth.logout, null, { errorContext: { toast: false } });
+
   }
 
-  static async UpdateProfile(userProfile: IProfile): Promise<void> {
-    const req: any = Profile.PrepPost(userProfile);
-
-    await HttpService.httpClient.post(Config.API.auth.profile, req);
-
-    AuthState.SavePartial(userProfile);
-    return null;
-  }
-
-  static async UpdatePassword(userProfile: IProfile, password: string): Promise<void> {
-    const req: any = Profile.PrepPassword(userProfile, password);
-    await HttpService.httpClient.post(Config.API.auth.profile, req);
-    AuthState.SavePartial({ ...userProfile, forceChange: false });
-    return null;
-  }
-
-  static async SendRequest(username: string): Promise<void> {
-    await HttpService.httpClient.post(Config.API.auth.reset, { shortname: username });
-    return null;
-  }
 }

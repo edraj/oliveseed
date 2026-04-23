@@ -1,8 +1,9 @@
+import { browser } from '$app/environment';
 import { EnumErrorCode, type IUiError } from '$core/error.model';
-import { StateService } from '$src/core/state.svelte';
+import { StateService } from '$src/core/state.abstract';
 import { Res } from '$utils/resources';
 import { mount } from 'svelte';
-import { EnumTimeout, type IToast, type IToastButton } from './toast.model';
+import { EnumTimeout, EnumToastIcon, type IToast, type IToastButton } from './toast.model';
 import Toaster from './Toaster.svelte';
 
 export class ToastService extends StateService<IToast> {
@@ -10,20 +11,25 @@ export class ToastService extends StateService<IToast> {
   private isCanceled: any;
 
   private addComponent() {
-    mount(Toaster, { target: document.body });
-    this.created = true;
+    if (browser) {
+
+      mount(Toaster, { target: document.body });
+      this.created = true;
+    }
   }
 
   public dismissButton: IToastButton = {
     css: 'btn-close',
-    text: Res.Get('Dismiss'),
+    text: '', // FIXME: change to dismiss
     click: (_: MouseEvent) => {
       this.Hide();
     },
   };
 
   private defaultOptions: IToast = {
-    css: 'toast',
+    css: '',
+    secondary: null,
+    icon: null,
     extracss: '',
     text: Res.Get('Unknown'),
     timeout: EnumTimeout.Short, // or config value
@@ -59,13 +65,13 @@ export class ToastService extends StateService<IToast> {
   }
 
   ShowError(code: any, options?: IToast) {
-    this.Show(code, { extracss: 'error', ...options });
+    this.Show(code, { icon: EnumToastIcon.Error, extracss: 'error', ...options });
   }
   ShowSuccess(code: any, options?: IToast) {
-    this.Show(code, { extracss: 'success', ...options });
+    this.Show(code, { icon: EnumToastIcon.Success, extracss: 'success', ...options });
   }
   ShowWarning(code: any, options?: IToast) {
-    this.Show(code, { extracss: 'warning', ...options });
+    this.Show(code, { icon: EnumToastIcon.Warning, extracss: 'warning', ...options });
   }
 
   Hide() {
@@ -76,10 +82,7 @@ export class ToastService extends StateService<IToast> {
   }
 
   HandleUiError(error: IUiError, options?: IToast): any {
-    // check code for generic responses
-    // 400 and 500 are errors
-    // 401 and 403 are info with relogin
-    // 404 is warning
+    // catch all and throw back, dmart is too unreliable in terms of status code
 
     if (error.code) {
       // do a switch case for specific errors
@@ -87,19 +90,6 @@ export class ToastService extends StateService<IToast> {
         case 500:
           // terrible error, code always unknown
           this.ShowError('Unknown', options);
-          break;
-        case 400:
-          // server error
-          this.ShowError(error.code, options);
-          break;
-        case 401:
-        case 403:
-          // auth error, just show a unified message
-          this.ShowError('UNAUTHORIZED', options);
-          break;
-        case 404:
-          // thing does not exist, better let each component decide
-          this.ShowWarning(error.code, options);
           break;
         default:
           // other errors

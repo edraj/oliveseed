@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { IDialogData } from '$lib/dialog/service.svelte';
+  import type { IDialogData } from '$src/lib/dialog/service';
   import { Res } from '$src/utils/resources';
   // TODO: add actions
   const props: IDialogData<{ message: string; actions?: any[] }> = $props();

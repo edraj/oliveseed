@@ -1,11 +1,15 @@
-import { browser } from "$app/environment";
-import { Config } from "$src/config";
+import { browser } from '$app/environment';
 import { ConfigService } from '$src/data/config.service';
-import { Res } from "$utils/resources";
+import { Res } from '$utils/resources';
+
+interface IStorageValue<T> {
+  value: T;
+  timestamp: number;
+  expiresin: number;
+}
 
 export class StorageService {
   private static instance: StorageService | null = null;
-
 
   static get SiteStorage(): StorageService {
     if (this.instance) {
@@ -39,7 +43,7 @@ export class StorageService {
 
   private getKey(key: string, withLanguage = false): string {
     return `${ConfigService.Config.Cache.Key}${
-      withLanguage ? "." + Res.language : ""
+      withLanguage ? '.' + Res.language : ''
     }.${key}`;
   }
 
@@ -47,21 +51,21 @@ export class StorageService {
     const _key = this.getKey(ConfigService.Config.Cache.ResetKey);
     const _reset: any = this.ourStorage.getItem(_key);
     // if it does not exist, it must have changed in config, remove everything
-    if (!_reset || _reset !== "true") {
+    if (!_reset || _reset !== 'true') {
       this.clear();
-      this.ourStorage.setItem(_key, "true");
+      this.ourStorage.setItem(_key, 'true');
     }
     _seqlog(_key);
   }
 
-  setItem(
+  setItem<T>(
     key: string,
-    value: any,
-    expiresin: number = Config.Cache.Timeout,
-    withLanguage = false
+    value: T,
+    expiresin: number = ConfigService.Config.Cache.Timeout,
+    withLanguage = false,
   ): void {
     // set cache with expiration time stamp, each obect has its own? or one for all?
-    const _storage: any = {
+    const _storage: IStorageValue<T> = {
       value: value,
       timestamp: Date.now(), // in milliseconds
       expiresin: expiresin, // in hours
@@ -69,22 +73,22 @@ export class StorageService {
 
     this.ourStorage.setItem(
       this.getKey(key, withLanguage),
-      JSON.stringify(_storage)
+      JSON.stringify(_storage),
     );
   }
 
-  getItem(key: string, withLanguage = false): any {
+  getItem<T>(key: string, withLanguage = false): T | null {
     // if browser get storage, else return null
 
     const _key = this.getKey(key, withLanguage);
-    const value: any = this.ourStorage.getItem(_key);
+    const value = this.ourStorage.getItem(_key);
 
     if (value) {
-      const _value: any = JSON.parse(value);
+      const _value: IStorageValue<T> = JSON.parse(value);
 
       // calculate expiration
-      if (Date.now() - _value.timestamp > _value.expiresin * 3600000) {
-        this.removeItem(_key);
+      if (Date.now() - _value.timestamp > _value.expiresin * 3_600_000) {
+        this.removeItem(key, withLanguage);
         return null;
       }
 
@@ -99,7 +103,7 @@ export class StorageService {
   setCache(
     key: string,
     value: any,
-    expiresIn: number = Config.Cache.Timeout
+    expiresIn: number = ConfigService.Config.Cache.Timeout,
   ): void {
     this.setItem(key, value, expiresIn, true);
   }
@@ -124,4 +128,3 @@ export class StorageService {
     toClear.forEach((n) => this.ourStorage.removeItem(n));
   }
 }
-

@@ -1,5 +1,4 @@
-import { StorageService } from "./storage.service";
-
+import { StorageService } from './storage.service';
 
 interface ICached {
   key: string;
@@ -7,9 +6,12 @@ interface ICached {
   expiresin: number; // hours
 }
 
-
 export function DataCache<T>(options?: Partial<ICached>) {
-  return  function (target: T, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (
+    target: T,
+    propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) {
     const originalMethod = descriptor.value; // save a reference to the original method
 
     // NOTE: Do not use arrow syntax here. Use a function expression in
@@ -18,41 +20,46 @@ export function DataCache<T>(options?: Partial<ICached>) {
     const cacheKey = options?.key || `${propertyKey}`;
 
     descriptor.value = async function (...args: any[]): Promise<any> {
-
-      const key = options?.withArgs ? `${cacheKey}_${JSON.stringify(args)}` : cacheKey;
+      // remove null args
+      const _args = args
+        .filter((a) => !!a)
+        .filter((a) => typeof a !== 'function');
+      const key = options?.withArgs
+        ? `${cacheKey}_${JSON.stringify(_args)}`
+        : cacheKey;
 
       const _data: any = StorageService.SiteStorage.getCache(key);
       if (_data) {
         // if localStroage exist, return
-        _debug(_data, "Cached " + cacheKey);
+        _debug(_data, 'Cached ' + cacheKey);
         return _data;
       }
 
       const response = await originalMethod.apply(this, args);
       StorageService.SiteStorage.setCache(key, response, options?.expiresin);
       return response;
-
     };
 
     return descriptor;
   };
 }
 
-
 // clear before applying
 export function ClearCache<T>(options?: Partial<ICached>) {
-  return function (target: T, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (
+    target: T,
+    propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) {
     const originalMethod = descriptor.value;
 
     // exact key
     const cacheKey = options?.key;
 
     descriptor.value = async function (...args: any[]): Promise<any> {
-
       StorageService.SiteStorage.removeCache(cacheKey);
 
       return await originalMethod.apply(this, args);
-
     };
 
     return descriptor;

@@ -72,17 +72,8 @@ export const ClearValidation = (form: HTMLFormElement): void => {
 };
 
 
-// export const PATTERNS = {
-//   shortname: '[a-zA-Z0-9_]+',
-//   password: '[a-zA-Z0-9]{8,}',
-//   mobile: '7[789][0-9]{8}',
-//   phone: '[+\\d\\s]*',
-//   image: '.+\\.{1}(jpg|png|gif|svg)',
-//   url: '(http|https):\/\/[a-zA-Z0-9-.]+.[a-zA-Z]{2,3}(/S*)'
-// };
-
 export const InputPatterns = new Map<string, any>([
-  ['mobile', '7[789][0-9]{8}'],
+  ['mobile', '[\\s]*(?:\\+964|964|0|7)[\\d\\s]{8,}'],
   ['phone', '[+\\d\\s]*'],
   ['shortname', '[a-zA-Z0-9_]+'],
   ['password', '[a-zA-Z0-9]{8,}'],

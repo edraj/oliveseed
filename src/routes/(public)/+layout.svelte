@@ -1,8 +1,8 @@
 <script lang="ts">
-  import Language from "$src/shared/Language.svelte";
-  import { routeLink } from "$utils/route";
+  import Language from '$src/shared/Language.svelte';
+  import { routeLink } from '$utils/route';
 
-  _seqlog("public layout loaded");
+  _seqlog('public layout loaded');
 
   let { children, data } = $props();
   const pages = data.pages;

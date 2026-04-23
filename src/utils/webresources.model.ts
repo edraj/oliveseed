@@ -1,15 +1,11 @@
 import { Config } from '$src/config';
-import { ConfigService } from '$src/data/config.service';
 import { Res } from '$utils/resources';
 
 export interface IWebResource {
   [key: string]: string;
 }
 
-
-
-
-export const languageInput = ConfigService.Config.Res.languages.reduce((acc: any, cur) => {
+export const languageInput = Config.Res.languages.reduce((acc: any, cur) => {
   acc[cur.name] = null;
   return acc;
 }, {});

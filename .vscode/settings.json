@@ -2,11 +2,11 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
   },
-  "typescript.preferences.quoteStyle": "single",
-  "prettier.quoteProps": "consistent",
+  "js/ts.preferences.quoteStyle": "single",
   "prettier.embeddedLanguageFormatting": "auto",
+  "prettier.useTabs": false,
   "editor.formatOnSaveMode": "modifications",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "prettier.bracketSameLine": true,
   "prettier.jsxSingleQuote": true,
   "prettier.printWidth": 120,
@@ -21,5 +21,8 @@
   "svelte.plugin.svelte.format.config.singleQuote": true,
   "[html]": {
     "editor.formatOnSave": false
+  },
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
   }
 }

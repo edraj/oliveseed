@@ -1,36 +1,21 @@
-import { makeDate, toISODateString } from '$src/utils/common';
+import { makeDate } from '$src/utils/common';
 import { Res } from '$utils/resources';
 
 export const displayDate = (date: Date | null, withTime = false): string | null => {
   if (!date) { return null; }
   // why DE because it uses a right date seq
-  if (withTime) { return date.toLocaleString(Res.language + '-DE'); }
+  const formatter = Intl.DateTimeFormat(Res.language + '-DE', { hour12: true, day: 'numeric', weekday: 'long', month: 'long', hour: 'numeric', minute: 'numeric' });
+  if (withTime) { return formatter.format(date); }
   return date.toLocaleDateString(Res.language + '-DE');
 };
 
-export const displayTime = (time: string | null): string | null => {
-  // turn the time into local time
-  return time;
-};
 
 export const displayAsDate = (date: string | null, withTime = false): string | null => {
   const _date = makeDate(date);
   return _date ? displayDate(_date, withTime) : null;
 };
 
-// for printing, yyyy-mm-dd HH:mm:ss
-export const toVoucherDate = (date: string, withTime = false): string => {
-  const _date = makeDate(date);
-  if (!_date) return null;
 
-  const _ret = toISODateString(_date);
-  if (!withTime) return _ret;
-
-  return _ret + ' ' + Intl.DateTimeFormat('en', {
-    timeStyle: "medium",
-    hour12: false
-  }).format(_date);
-};
 
 export const asRelativeTime = (date: string | null): string | null => {
   const _date = makeDate(date);

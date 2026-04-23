@@ -109,4 +109,35 @@ export class Profile {
       },
     };
   }
+  static PrepCode(email: string, code?: string): any {
+    return {
+      email: email,
+    };
+  }
+
+  static PrepVerify(user: IProfile, code?: string): any {
+
+    return {
+      shortname: user.shortname,
+      subpath: Config.API.auth.path,
+      resource_type: EnumResourceType.user, // content or user?
+      attributes: {
+        email: user.email,
+        email_otp: code,
+        is_email_verified: true
+      },
+    };
+  }
+
+  static PrepDelete(user: IProfile): any {
+    // deactivate self
+    return {
+      resource_type: EnumResourceType.user,
+      shortname: user.shortname,
+      subpath: Config.API.auth.path,
+      attributes: {
+        is_active: false,
+      },
+    };
+  }
 }
